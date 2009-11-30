@@ -1,0 +1,80 @@
+#summary Coding Conventions for the OWASP ESAPI4JS Project
+
+=Project Layout=
+{{{
+ + <root>
+   - documentation
+   + src
+     + main
+       + java
+       + javascript
+       + resources
+     + test
+       + java
+       + javascript
+       + resources
+}}}
+
+=Build Information=
+The ESAPI4JS Build Process is an Ant driven process which runs a Java Process that parses for through the JS source files and merges them into 'compiled' versions which are merged component files. After the merge process the Test Cases are run using JSUnit and code analysis is run with JSLint. The final stage of the build process passes the 'compiled' code through the YUI Compressor and runs the JSDoc utilities to generate the documentation.
+
+==Build Directives==
+===Module===
+This directive is required in every source file. If this directive is missing the build will fail. The directive takes a Alias to a JS file defined in _/src/main/resources/Modules.properties_
+
+Example:
+{{{
+@Module(Core)
+}}}
+
+=Example Source File=
+{{{
+ /*
+  * OWASP Enterprise Security API (ESAPI)
+  *
+  * This file is part of the Open Web Application Security Project (OWASP)
+  * Enterprise Security API (ESAPI) project. For details, please see
+  * <a href="http://www.owasp.org/index.php/ESAPI">http://www.owasp.org/index.php/ESAPI</a>.
+  *
+  * Copyright (c) 2008 - The OWASP Foundation
+  *
+  * The ESAPI is published by OWASP under the BSD license. You should read and accept the
+  * LICENSE before you use, modify, and/or redistribute this software.
+  */
+
+@Module(Core)
+
+$namespace('org.owasp.esapi.encoder');
+
+$class( org.owasp.esapi.encoder.MyEncoder, $extends( org.owasp.esapi.encoder.BaseEncoder, $implements( [ org.owasp.esapi.SomeInterface, org.owasp.esapi.SomeOtherInterface ], {
+   constructor: function() {
+      // ... Do Stuff
+   },
+
+   encode: function( oEncodingTarget, sInput ) {
+      // ... Do Stuff
+   }
+})));
+}}}
+
+=Code Style=
+*1. Every file must start with the copyright notice.*
+{{{
+ /*
+  * OWASP Enterprise Security API (ESAPI)
+  *
+  * This file is part of the Open Web Application Security Project (OWASP)
+  * Enterprise Security API (ESAPI) project. For details, please see
+  * <a href="http://www.owasp.org/index.php/ESAPI">http://www.owasp.org/index.php/ESAPI</a>.
+  *
+  * Copyright (c) 2008 - The OWASP Foundation
+  *
+  * The ESAPI is published by OWASP under the BSD license. You should read and accept the
+  * LICENSE before you use, modify, and/or redistribute this software.
+  */
+}}}
+
+*2. Every class must be namespaced correctly*
+{{{
+$namespace('org.owasp.esapi');
+}}}
