@@ -3,16 +3,16 @@
 =Project Layout=
 {{{
  + <root>
-   - documentation
+   - documentation ( Project Documentation )
    + src
      + main
-       + java
-       + javascript
-       + resources
+       + java ( Java Build Process )
+       + javascript ( ESAPI4JS Source Files )
+       + resources ( Resources for the Java Build Process )
      + test
-       + java
-       + javascript
-       + resources
+       + java ( Unit Tests for the Java Build Process )
+       + javascript ( ESAPI4JS JSUnit Tests )
+       + resources ( Resources for the Java Build Process Unit Tests )
 }}}
 
 =Build Information=
