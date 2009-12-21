@@ -99,3 +99,9 @@ var DefaultEncoder = function() {
 {{{
 $namespace('org.owasp.esapi');
 }}}
+
+*3. Class definitions should be wrapped in Closures to preserve private and public scoping*
+
+*4. Private data or methods should be wrapped in a _private closure inside the Class closure for readability*
+
+*5. Public data or methods should be wrapped in a _public closure inside the Class closure for readability*
