@@ -24,7 +24,7 @@ This directive is required in every source file. If this directive is missing th
 
 Example:
 {{{
-@Module(Core)
+// @Module(Core)
 }}}
 
 =Example Source File=
@@ -46,15 +46,36 @@ Example:
 
 $namespace('org.owasp.esapi.encoder');
 
-$class( org.owasp.esapi.encoder.MyEncoder, $extends( org.owasp.esapi.encoder.BaseEncoder, $implements( [ org.owasp.esapi.SomeInterface, org.owasp.esapi.SomeOtherInterface ], {
-   constructor: function() {
-      // ... Do Stuff
-   },
+var Encoder = {
+   encode: function() {}
+};
 
-   encode: function( oEncodingTarget, sInput ) {
-      // ... Do Stuff
-   }
-})));
+var DefaultEncoder = function() {
+   // Declare private properties and methods in a _private closure.
+   var _private = {
+      doPrivateWork: function() {
+         return "Stuff";
+      },
+
+      privateVar: "Private";
+   };
+
+   // Declare public properties and methods in a _public closure.
+   var _public = {
+      encode: function(s) {
+         return ""; 
+      }
+   };
+
+   // If the class implements any interfaces, implement them here
+   _public.implement( Encoder );
+
+   // If this is a sealed class (most ESAPI classes should be) seal it before returning
+   _public.seal();
+
+   // Return the sealed closure of the class.
+   return _public;
+};
 }}}
 
 =Code Style=
