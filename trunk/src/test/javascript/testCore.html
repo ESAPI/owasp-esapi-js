@@ -18,23 +18,11 @@
     <title>Test Page for ESAPI4JS Core.js</title>
     <script type="text/javascript" language="JavaScript" src="jsunit/app/jsUnitCore.js"></script>
     <script type="text/javascript" language="JavaScript" src="../../main/javascript/org/owasp/esapi/Core.js"></script>
+    <script type="text/javascript" language="JavaScript" src="org/owasp/esapi/TestCore.js"></script>
 </head>
 <body>
-<script type="text/javascript" language="JavaScript">
-    function testNamespace() {
-        assertNotNull($namespace);
-        assertEvaluatesToTrue($namespace('org.owasp.esapi.testnamespace'));
-    }
-
-    function testESAPIInstance() {
-        assertNotNull($ESAPI);
-    }
-
-    function testEncodeForBase64() {
-        var testString = 'This is a test string';
-        assertEquals($ESAPI.encoder().decodeFromBase64($ESAPI.encoder().encodeForBase64(testString)), testString);
-    }
-</script>
+<div id="test"></div>
+    <input type="button" onclick="alert($ESAPI.encoder().cananicalize('&amp;'));" />
 </body>
 </html>
 
