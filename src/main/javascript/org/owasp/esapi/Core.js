@@ -402,7 +402,7 @@ org.owasp.esapi.Base64 = {
 
         return out;
     }
-}
+};
 
 org.owasp.esapi.Encoder = function( aCodecs ) {
     var _codecs = [],
