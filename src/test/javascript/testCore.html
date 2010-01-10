@@ -22,7 +22,7 @@
 </head>
 <body>
 <div id="test"></div>
-    <input type="button" onclick="alert($ESAPI.encoder().cananicalize('&amp;'));" />
+    <input type="button" onclick="var codec=new org.owasp.esapi.codecs.JavascriptCodec(); alert(codec.encode('<'));" />
 </body>
 </html>
 
