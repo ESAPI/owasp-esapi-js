@@ -13,13 +13,7 @@
 
 // @Module(Core)
 
-/**
- * Creates a new empty namespace if it doesn't already exist.
- * @param name      The new namespace to create
- * @param separator The seperator for the namespace (default is .)
- * @param container The base container for the namespace (default is window)
- * @return          The namespace created
- */
+// Utility and Core API Methods
 var $namespace = function(name, separator, container){
   var ns = name.split(separator || '.'),
     o = container || window,
@@ -32,22 +26,12 @@ var $namespace = function(name, separator, container){
 };
 
 if (!$) {
-    /**
-     * Shortcut to <pre>document.getElementById</pre>
-     * @param sElementID
-     *              The ID of the element to retrieve
-     * @return HTMLObject
-     */
     var $ = function( sElementID ) {
         return document.getElementById( sElementID );
     };
 }
 
 if (!Array.prototype.each) {
-    /**
-     * Iterator function for Arrays.
-     * @param fIterator The iterator function to be executed on each element in the array.
-     */
     Array.prototype.each = function(fIterator) {
         if (typeof fIterator != 'function') {
             throw 'Illegal Argument for Array.each';
@@ -60,11 +44,6 @@ if (!Array.prototype.each) {
 }
 
 if (!Array.prototype.contains) {
-    /**
-     * Determines whether the passed in object exists in the array.
-     * @param srch The object to search for
-     * @return True if the passed in object is found, false otherwise
-     */
     Array.prototype.contains = function(srch) {
         var found = false;
         this.each(function(e) {
@@ -77,7 +56,16 @@ if (!Array.prototype.contains) {
     };
 }
 
-
+if (!String.prototype.charCodeAt) {
+    String.prototype.charCodeAt = function( idx ) {
+        var c = this.charAt(idx);
+        for ( var i=0;i<65536;i++) {
+            var s = String.fromCharCode(i);
+            if ( s == c ) { return i; }
+        }
+        return 0;
+    };
+}
 
 // Declare some Core Exceptions
 if ( !RuntimeException ) {
@@ -273,7 +261,16 @@ org.owasp.esapi.codecs.Codec = function() {
     };
 };
 
+org.owasp.esapi.codecs.Codec.getHexForNonAlphanumeric = function(c) {
+    if(c.charCodeAt(0) < 256) {
+        return org.owasp.esapi.codecs.Codec.hex[c.charCodeAt(0)];
+    }
+    return c.charCodeAt(0).toString(16);
+};
+
 org.owasp.esapi.codecs.HTMLEntityCodec = function() {
+    var _super = new org.owasp.esapi.codecs.Codec();
+
     return {
         encode: function( aImmune, sInput ) {
             var out = '';
@@ -313,6 +310,329 @@ org.owasp.esapi.codecs.HTMLEntityCodec = function() {
     };
 };
 
+org.owasp.esapi.codecs.JavascriptCodec = function() {
+    var _super = new org.owasp.esapi.codecs.Codec();
+
+    return {
+        encode: function( aImmune, sInput ) {
+            var out = '';
+            for ( var idx = 0; idx < sInput.length; idx ++ ) {
+                var ch = sInput.charAt(idx);
+                if ( aImmune.contains(ch) ) {
+                    out += ch;
+                }
+                else {
+                    var hex = org.owasp.esapi.codecs.Codec.getHexForNonAlphanumeric(ch);
+                    if ( hex == null ) {
+                        out += ch;
+                    }
+                    else {
+                        var tmp = ch.charCodeAt(0).toString(16);
+                        if ( ch.charCodeAt(0) < 256 ) {
+                            var pad = "00".substr(tmp.length);
+                            out += "\\x" + pad + tmp.toUpperCase();
+                        }
+                        else {
+                            var pad = "0000".substr(tmp.length);
+                            out += "\\u" + pad + tmp.toUpperCase();
+                        }
+                    }
+                }
+            }
+            return out;
+        },
+
+        decode: _super.decode,
+
+        decodeCharacter: function( oPushbackString ) {
+            oPushbackString.mark();
+            var first = oPushbackString.next();
+            if ( first == null ) {
+                oPushbackString.reset();
+                return null;
+            }
+
+            if ( first != '\\' ) {
+                oPushbackString.reset();
+                return null;
+            }
+
+            var second = oPushbackString.next();
+            if (second == null) {
+                input.reset();
+                return null;
+            }
+
+            // \0 collides with the octal decoder and is non-standard
+            // if ( second.charValue() == '0' ) {
+            //      return Character.valueOf( (char)0x00 );
+            if (second == 'b') {
+                return 0x08;
+            } else if (second == 't') {
+                return 0x09;
+            } else if (second == 'n') {
+                return 0x0a;
+            } else if (second == 'v') {
+                return 0x0b;
+            } else if (second == 'f') {
+                return 0x0c;
+            } else if (second == 'r') {
+                return 0x0d;
+            } else if (second == '\"') {
+                return 0x22;
+            } else if (second == '\'') {
+                return 0x27;
+            } else if (second == '\\') {
+                return 0x5c;
+            } else if (second.toLowerCase() == 'x') {
+                var out = '';
+                for (var i = 0; i < 2; i++) {
+                    var c = oPushbackString.nextHex();
+                    if (c != null) {
+                        out += c;
+                    } else {
+                        input.reset();
+                        return null;
+                    }
+                }
+                try {
+                    var n = parseInt(out, 16);
+                    return String.fromCharCode(n);
+                } catch (e) {
+                    oPushbackString.reset();
+                    return null;
+                }
+            } else if (second.toLowerCase() == 'u') {
+                var out = '';
+                for (var i = 0; i < 4; i++) {
+                    var c = oPushbackString.nextHex();
+                    if (c != null) {
+                        out += c;
+                    } else {
+                        input.reset();
+                        return null;
+                    }
+                }
+                try {
+                    var n = parseInt(out, 16);
+                    return String.fromCharCode(n);
+                } catch (e) {
+                    oPushbackString.reset();
+                    return null;
+                }
+            } else if ( oPushbackString.isOctalDigit( second ) ) {
+                var out = second;
+                var c2 = oPushbackString.next();
+                if ( !oPushbackString.isOctalDigit(c2)) {
+                    oPushbackString.pushback(c2);
+                } else {
+                    out += c2;
+                    var c3 = oPushbackString.next();
+                    if ( !oPushbackString.isOctalDigit(c3)) {
+                        oPushbackString.pushback(c3);
+                    } else {
+                        out += c3;
+                    }
+                }
+
+                try {
+                    var n = parseInt( out, 8 );
+                    return String.fromCharCode(n);
+                } catch (e) {
+                    oPushbackString.reset();
+                    return null;
+                }
+            }
+            return second;
+        }
+    };
+};
+
+org.owasp.esapi.codecs.CSSCodec = function() {
+    var _super = new org.owasp.esapi.codecs.Codec();
+
+    return {
+        encode: _super.encode,
+
+        decode: _super.decode,
+
+        encodeCharacter: function( aImmune, c ) {
+            if ( aImmune.contains( c ) ) {
+                return c;
+            }
+
+            var hex = org.owasp.esapi.codecs.Codec.getHexForNonAlphanumeric(c);
+            if ( hex == null ) {
+                return c;
+            }
+
+            return "\\" + hex + " ";
+        },
+
+        decodeCharacter: function( oPushbackString ) {
+            oPushbackString.mark();
+            var first = oPushbackString.next();
+            if ( first == null ) {
+                oPushbackString.reset();
+                return null;
+            }
+
+            if ( first != '\\' ) {
+                oPushbackString.reset();
+                return null;
+            }
+
+            var second = oPushbackString.next();
+            if ( second == null ) {
+                oPushbackString.reset();
+                return null;
+            }
+
+            if ( oPushbackString.isHexDigit(second) ) {
+                var out = second;
+                for ( var i =0; i<6; i ++ ) {
+                    var c = oPushbackString.next();
+                    if ( c == null || c.charCodeAt(0) == 0x20 ) {
+                        break;
+                    }
+                    if ( oPushbackString.isHexDigit(c) ) {
+                        out += c;
+                    } else {
+                        input.pushback(c);
+                        break;
+                    }
+                }
+
+                try {
+                    var n = parseInt(out, 16);
+                    return String.fromCharCode(n);
+                } catch (e) {
+                    oPushbackString.reset();
+                    return null;
+                }
+            }
+
+            return second;
+        }
+    };
+};
+
+org.owasp.esapi.codecs.UTF8 = {
+    encode: function(sInput) {
+        var input = sInput.replace(/\r\n/g, "\n");
+        var utftext = '';
+
+        for (var n = 0; n < input.length; n ++) {
+            var c = input.charCodeAt(n);
+
+            if ( c < 128 ) {
+                utftext += String.fromCharCode(c);
+            }
+            else if (( c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+            else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) |128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+        }
+
+        return utftext;
+    },
+
+    decode: function(sInput) {
+        var out = '';
+        var i = c = c1 = c2 = 0;
+
+        while ( i < sInput.length ) {
+            c = sInput.charCodeAt(i);
+
+            if (c < 128) {
+                out += String.fromCharCode(c);
+                i ++;
+            }
+            else if ((c > 191) && (c < 224)) {
+                c2 = sInput.charCodeAt(i+1);
+                out += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else {
+                c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+            }
+        }
+
+        return out;
+    }
+};
+
+org.owasp.esapi.codecs.PercentCodec = function() {
+    var _super = new org.owasp.esapi.codecs.Codec();
+
+    var ALPHA_NUMERIC_STR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var RFC_NON_ALPHANUMERIC_UNRESERVED_STR = "-._~";
+    var ENCODED_NON_ALPHA_NUMERIC_UNRESERVED = true;
+    var UNENCODED_STR = ALPHA_NUMERIC_STR + (ENCODED_NON_ALPHA_NUMERIC_UNRESERVED ? "" : RFC_NON_ALPHANUMERIC_UNRESERVED_STR);
+
+    var getTwoUpperBytes = function( b ) {
+        var out = '';
+        if ( b < -128 || b > 127 ) {
+            throw new IllegalArgumentException("b is not a byte (was " + b + ")" );
+        }
+        b &= 0xFF;
+        if ( b < 0x10 ) {
+            out += '0';
+        }
+        return out + b.toString(16).toUpperCase();
+    };
+
+    return {
+        encode: _super.encode,
+
+        decode: _super.decode,
+
+        encodeCharacter: function( aImmune, c ) {
+            if ( UNENCODED_STR.indexOf(c) > -1) {
+                return c;
+            }
+
+            var bytes = org.owasp.esapi.codecs.UTF8.encode(c);
+            var out = '';
+            for ( var b=0;b<bytes.length;b++ ) {
+                out += '%' + getTwoUpperBytes(bytes.charCodeAt(b));
+            }
+            return out;
+        },
+
+        decodeCharacter: function( oPushbackString ) {
+            oPushbackString.mark();
+            var first = oPushbackString.next();
+            if ( first == null || first != '%' ) {
+                oPushbackString.reset();
+                return null;
+            }
+
+            var out = '';
+            for (var i=0;i<2;i++) {
+                var c = oPushbackString.nextHex();
+                if ( c != null ) { out += c; }
+            }
+            if ( out.length == 2 ) {
+                try {
+                    var n = parseInt(out, 16);
+                    return String.fromCharCode(n);
+                } catch (e) { }
+            }
+            oPushbackString.reset();
+            return null;
+        }
+    };
+};
+
 /**
  * DOMUtilities is a collection of helper methods for accessing the DOM. This is primarily for use between ESAPI
  * objects, however is accessible to code outside of the ESAPI. While fairly limited, it provides simple shortcut
@@ -337,7 +657,7 @@ org.owasp.esapi.codecs.Base64 = {
         var ch1,ch2,ch3,enc1,enc2,enc3,enc4;
         var i = 0;
 
-        var input = this._utf8_encode(sInput);
+        var input = org.owasp.esapi.codecs.UTF8.encode(sInput);
 
         while (i < input.length) {
             ch1 = input.charCodeAt(i++);
@@ -392,71 +712,31 @@ org.owasp.esapi.codecs.Base64 = {
             }
         }
 
-        out = this._utf8_decode(out);
-        return out;
-    },
-
-    _utf8_encode: function(sInput) {
-        var input = sInput.replace(/\r\n/g, "\n");
-        var utftext = '';
-
-        for (var n = 0; n < input.length; n ++) {
-            var c = input.charCodeAt(n);
-
-            if ( c < 128 ) {
-                utftext += String.fromCharCode(c);
-            }
-            else if (( c > 127) && (c < 2048)) {
-                utftext += String.fromCharCode((c >> 6) | 192);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-            else {
-                utftext += String.fromCharCode((c >> 12) | 224);
-                utftext += String.fromCharCode(((c >> 6) & 63) |128);
-                utftext += String.fromCharCode((c & 63) | 128);
-            }
-        }
-
-        return utftext;
-    },
-
-    _utf8_decode: function(sInput) {
-        var out = '';
-        var i = c = c1 = c2 = 0;
-
-        while ( i < sInput.length ) {
-            c = sInput.charCodeAt(i);
-
-            if (c < 128) {
-                out += String.fromCharCode(c);
-                i ++;
-            }
-            else if ((c > 191) && (c < 224)) {
-                c2 = sInput.charCodeAt(i+1);
-                out += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-                i += 2;
-            }
-            else {
-                c2 = utftext.charCodeAt(i+1);
-				c3 = utftext.charCodeAt(i+2);
-				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-				i += 3;
-            }
-        }
-
+        out = org.owasp.esapi.codecs.UTF8.decode(out);
         return out;
     }
 };
 
 org.owasp.esapi.Encoder = function( aCodecs ) {
     var _codecs = [],
-        _htmlCodec = new org.owasp.esapi.codecs.HTMLEntityCodec();
+        _htmlCodec = new org.owasp.esapi.codecs.HTMLEntityCodec(),
+        _javascriptCodec = new org.owasp.esapi.codecs.JavascriptCodec(),
+        _cssCodec = new org.owasp.esapi.codecs.CSSCodec(),
+        _percentCodec = new org.owasp.esapi.codecs.PercentCodec();
 
     if ( !aCodecs ) {
         _codecs.push( _htmlCodec );
+        _codecs.push( _javascriptCodec );
+        _codecs.push( _cssCodec );
+        _codecs.push( _percentCodec );
     } else {
         _codecs = aCodecs;
     }
+
+    var IMMUNE_HTML = new Array(',', '.', '-', '_', ' ');
+    var IMMUNE_HTMLATTR = new Array(',', '.', '-', '_');
+    var IMMUNE_CSS = new Array();
+    var IMMUNE_JAVASCRIPT = new Array(',', '.', '_');
 
     return {
         cananicalize: function( sInput, bStrict ) {
@@ -503,11 +783,11 @@ org.owasp.esapi.Encoder = function( aCodecs ) {
         },
 
         normalize: function( sInput ) {
-            return sInput.replace( /[^\\p{ASCII}]/g, '' );
+            return sInput.replace( /[^\x00-\x7F]/g, '' );
         },
 
         encodeForHTML: function( sInput ) {
-            return !sInput ? null : _htmlCodec.encode( org.owasp.esapi.Encoder.IMMUNE_HTML, sInput );
+            return !sInput ? null : _htmlCodec.encode( IMMUNE_HTML, sInput );
         },
 
         decodeForHTML: function( sInput ) {
@@ -515,23 +795,25 @@ org.owasp.esapi.Encoder = function( aCodecs ) {
         },
 
         encodeForHTMLAttribute: function( sInput ) {
-            return !sInput ? null : _htmlCodec.encode( org.owasp.esapi.Encoder.IMMUNE_HTMLATTR, sInput );
+            return !sInput ? null : _htmlCodec.encode( IMMUNE_HTMLATTR, sInput );
         },
 
         encodeForCSS: function( sInput ) {
-            return !sInput ? null : _cssCodec.encode( org.owasp.esapi.Encoder.IMMUNE_CSS, sInput );
+            return !sInput ? null : _cssCodec.encode( IMMUNE_CSS, sInput );
         },
 
-        encodeForJavascript: function( sInput ) {
-            return !sInput ? null : _javascriptCodec.encode( org.owasp.esapi.Encoder.IMMUNE_JAVASCRIPT, sInput );
+        encodeForJavaScript: function( sInput ) {
+            return !sInput ? null : _javascriptCodec.encode( IMMUNE_JAVASCRIPT, sInput );
         },
+
+        encodeForJavascript: this.encodeForJavaScript,
 
         encodeForURL: function( sInput ) {
             return !sInput ? null : escape(sInput);
         },
 
         decodeFromURL: function( sInput ) {
-            return !sInput ? null : unescape(this.cananicalize(sInput));
+            return !sInput ? null : unescape(sInput);
         },
 
         encodeForBase64: function( sInput ) {
@@ -615,6 +897,14 @@ org.owasp.esapi.StringUtilities = function() {
 
 };
 
+org.owasp.esapi.codecs.Codec.hex = [];
+for ( var c = 0; c < 0xFF; c ++ ) {
+    if ( c >= 0x30 && c <= 0x39 || c>= 0x41 && c <= 0x5A || c >= 0x61 && c <= 0x7A ) {
+        org.owasp.esapi.codecs.Codec.hex[c] = null;
+    } else {
+        org.owasp.esapi.codecs.Codec.hex[c] = c.toString(16);
+    }
+}
 
 var entityToCharacterMap = [];
 entityToCharacterMap["&quot"]        = "34";      /* 34 : quotation mark */
