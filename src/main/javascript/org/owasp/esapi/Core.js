@@ -56,6 +56,42 @@ if (!Array.prototype.contains) {
     };
 }
 
+if (!Array.prototype.getLongestKeyLength) {
+    Array.prototype.getLongestKeyLength = function() {
+        var len = 0;
+        for ( var key in this ) {
+            if ( !key instanceof String ) {
+                throw new RuntimeException("getLongestKeyMatch only works with Map<String,Object>" );
+            }
+
+            len = Math.max( len, key.length );
+        }
+        return len;
+    };
+}
+
+if (!Array.prototype.containsKey) {
+    Array.prototype.containsKey = function(srch) {
+        for ( var key in this ) {
+            if ( key.toLowerCase() == srch.toLowerCase() ) {
+                return true;
+            }
+        }
+        return false;
+    };
+}
+
+if (!Array.prototype.getCaseInsensitive) {
+    Array.prototype.getCaseInsensitive = function(key) {
+        for (var k in this) {
+            if (k.toLowerCase() == key.toLowerCase()) {
+                return this[k];
+            }
+        }
+        return null;
+    };
+}
+
 if (!String.prototype.charCodeAt) {
     String.prototype.charCodeAt = function( idx ) {
         var c = this.charAt(idx);
@@ -64,6 +100,12 @@ if (!String.prototype.charCodeAt) {
             if ( s == c ) { return i; }
         }
         return 0;
+    };
+}
+
+if (!String.prototype.endsWith) {
+    String.prototype.endsWith = function( test ) {
+        return this.substr( ( this.length - test.length ), test.length ) == test;
     };
 }
 
@@ -271,41 +313,138 @@ org.owasp.esapi.codecs.Codec.getHexForNonAlphanumeric = function(c) {
 org.owasp.esapi.codecs.HTMLEntityCodec = function() {
     var _super = new org.owasp.esapi.codecs.Codec();
 
-    return {
-        encode: function( aImmune, sInput ) {
-            var out = '';
-            for ( var i = 0; i < sInput.length; i ++ ) {
-                var c = sInput.charCodeAt(i);
-                if ( characterToEntityMap[c.toString()] ) {
-                    out += characterToEntityMap[c.toString()] + ';';
-                }
-                else {
-                    out += String.fromCharCode(c);
-                }
+    var getNumericEntity = function( input ) {
+        var first = input.peek();
+        if ( first == null ) {
+            return null;
+        }
+
+        if ( first == 'x' || first == 'X' ) {
+            input.next();
+            return parseHex( input );
+        }
+        return parseNumber( input );
+    };
+
+    var parseNumber = function( input ) {
+        var out = '';
+        while ( input.hasNext() ) {
+            var c = input.peek();
+            if ( c.match( /[0-9]/ ) ) {
+                out += c;
+                input.next();
+            } else if ( c == ';' ) {
+                input.next();
+                break;
+            } else {
+                break;
             }
-            return out;
+        }
+
+        try {
+            return parseInt( out );
+        } catch (e) {
+            return null;
+        }
+    };
+
+    var parseHex = function( input ) {
+        var out = '';
+        while ( input.hasNext() ) {
+            var c = input.peek();
+            if ( c.match( /[0-9A-Fa-f]/ ) ) {
+                out += c;
+                input.next();
+            } else if ( c == ';' ) {
+                input.next();
+                break;
+            } else {
+                break;
+            }
+        }
+        try {
+            return parseInt( out, 16 );
+        } catch (e) {
+            return null;
+        }
+    };
+
+    var getNamedEntity = function( input ) {
+        var entity = '';
+        while (input.hasNext()) {
+            var c = input.peek();
+            if ( c.match(/[A-Za-z]/) ) {
+                entity += c;
+                input.next();
+                if ( entityToCharacterMap.containsKey('&'+entity)) {
+                    if ( input.peek(';')) input.next();
+                    break;
+                }
+            } else if ( c == ';' ) {
+                input.next();
+            } else {
+                break;
+            }
+        }
+
+        return String.fromCharCode(entityToCharacterMap.getCaseInsensitive('&'+entity));
+    };
+
+    return {
+        encode: _super.encode,
+
+        decode: _super.decode,
+
+        encodeCharacter: function( aImmune, c ) {
+            if ( aImmune.contains(c) ) {
+                return c;
+            }
+
+            var hex = org.owasp.esapi.codecs.Codec.getHexForNonAlphanumeric(c);
+            if ( hex == null ) {
+                return c;
+            }
+
+            var cc = c.charCodeAt(0);
+            if ( ( cc <= 0x1f && c != '\t' && c != '\n' && c != '\r' ) || ( cc >= 0x7f && cc <= 0x9f ) || c == ' ' ) {
+                return " ";
+            }
+
+            var entityName = characterToEntityMap[cc];
+            if ( entityName != null ) {
+                return entityName + ";";
+            }
+
+            return "&#x" + hex + ";";
         },
 
-        decode: function( sInput ) {
-            var out = '';
-            for ( var i = 0; i < sInput.length; i ++ ) {
-                var c = sInput.charAt(i);
-                if ( c == '&' ) {
-                    var end = sInput.indexOf( ';', i );
-                    var entity = sInput.substr( i, end-i );
-                    if ( entityToCharacterMap[entity] ) {
-                        out += String.fromCharCode(entityToCharacterMap[entity]);
-                        i = end;
-                    }
-                    else {
-                        out += c;
-                    }
-                }
-                else {
-                    out += c;
+        decodeCharacter: function( oPushbackString ) {
+            var input = oPushbackString;
+            input.mark();
+            var first = input.next();
+            if ( first == null || first != '&' ) {
+                input.reset();
+                return null;
+            }
+
+            var second = input.next();
+            if ( second == null ) {
+                input.reset();
+                return null;
+            }
+
+            if ( second == '#' ) {
+                var c = getNumericEntity( input );
+                if ( c != null ) { return c; }
+            } else if ( second.match(/[A-Za-z]/) ) {
+                input.pushback(second);
+                var c = getNamedEntity( input );
+                if ( c != null ) {
+                    return c;
                 }
             }
-            return out;
+            input.reset();
+            return null;
         }
     };
 };

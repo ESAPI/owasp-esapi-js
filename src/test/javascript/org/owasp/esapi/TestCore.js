@@ -19,6 +19,10 @@ function testESAPIInstance() {
     assertNotNull($ESAPI);
 }
 
+function testStringEndswith() {
+    assertTrue( "Test".endsWith("t"));
+}
+
 function testEncoderEncodeForBase64() {
     var testString = 'This is a test string';
     assertEquals($ESAPI.encoder().decodeFromBase64($ESAPI.encoder().encodeForBase64(testString)), testString);
