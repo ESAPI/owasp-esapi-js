@@ -16,13 +16,22 @@
 <html>
 <head>
     <title>Test Page for ESAPI4JS Core.js</title>
+    <!-- Dependencies -->
+    <script type="text/javascript" language="JavaScript" src="../../../lib/log4js.js"></script>
     <script type="text/javascript" language="JavaScript" src="jsunit/app/jsUnitCore.js"></script>
-    <script type="text/javascript" language="JavaScript" src="../../main/javascript/org/owasp/esapi/Core.js"></script>
-    <script type="text/javascript" language="JavaScript" src="org/owasp/esapi/TestCore.js"></script>
+
+    <script type="text/javascript" language="JavaScript" src="core.js"></script>
+    <script type="text/javascript" language="JavaScript" src="esapi.properties.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../../main/javascript/org.owasp.esapi.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../../main/javascript/org.owasp.esapi.codecs.js"></script>
+    <script type="text/javascript" language="JavaScript" src="../../main/javascript/org.owasp.esapi.reference.encoding.js"></script>
+    <script type="text/javascript" language="JavaScript" src="TestCore.js"></script>
+    <script type="text/javascript" language="JavaScript">
+        ESAPI_Initialize();
+    </script>
 </head>
 <body>
-<div id="test"></div>
-    <input type="button" onclick="var codec=new org.owasp.esapi.codecs.JavascriptCodec(); alert(codec.encode('<'));" />
+    <div id="test"></div>
 </body>
 </html>
 
