@@ -68,15 +68,13 @@ function testEncoderEncodeForHTML() {
     assertEquals("one&amp;two", instance.encodeForHTML("one&two"));
 }
 
-/* TODO: Fix HTMLCodec
 function testEncoderEncoderFormHTMLAttribute() {
     var instance = $ESAPI.encoder();
     assertEquals(null, instance.encodeForHTMLAttribute(null));
     assertEquals("&lt;script&gt;", instance.encodeForHTMLAttribute("<script>"));
     assertEquals(",.-_", instance.encodeForHTMLAttribute(",.-_"));
-    assertEquals("&#x20;&#x21;&#x40;&#x24;&#x25;&#x28;&#x29;&#x3d;&#x2b;&#x7b;&#x7d;&#x5b;&#x5d;", instance.encodeForHTMLAttribute(" !@$%()=+{}[]"));
+    assertEquals(" &#x21;&#x40;&#x24;&#x25;&#x28;&#x29;&#x3d;&#x2b;&#x7b;&#x7d;&#x5b;&#x5d;", instance.encodeForHTMLAttribute(" !@$%()=+{}[]"));
 }
-*/
 
 function testEncoderEncodeForCSS() {
     var instance = $ESAPI.encoder();
