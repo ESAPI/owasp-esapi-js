@@ -209,7 +209,8 @@ if ( !IllegalArgumentException ) {
 
 var $ESAPI_Properties = {
     logger: {
-        Level: Log4js.Level.ALL,
+        Implementation: 'org.owasp.esapi.reference.logging.Log4jsLogFactory',
+        Level: Level.WARNING,
         Appenders: [ Log4js.ConsoleAppender ]
     },
 

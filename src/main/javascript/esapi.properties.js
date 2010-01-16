@@ -12,9 +12,10 @@
  */
 
 var $ESAPI_Properties = {
-    logger: {
-        Level: Log4js.Level.ALL,
-        Appenders: [ Log4js.ConsoleAppender ]
+    logging: {
+        Implementation: 'org.owasp.esapi.reference.logging.Log4JSLogFactory',
+        Level: 'org.owasp.esapi.Logger.ALL',
+        Appenders: [ new Log4js.ConsoleAppender() ]
     },
 
     encoder: {

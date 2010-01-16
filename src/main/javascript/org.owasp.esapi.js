@@ -34,6 +34,19 @@ org.owasp.esapi = {
         };
     },
 
+    HTTPUtilities: function() {
+        return {
+            addCookie: false,
+            getSessionID: false,
+            getCookie: false,
+            killAllCookies: false,
+            killCookie: false,
+            logHTTPRequest: false,
+            sendForward: false,
+            getRequestParameter: false
+        };
+    },
+
     IntrusionException: function(sUserMessage, sLogMessage, oCause) {
         var _super = new org.owasp.esapi.EnterpriseSecurityException(sUserMessage, sLogMessage, oCause);
 
@@ -44,6 +57,53 @@ org.owasp.esapi = {
             getStackTrace: _super.getStackTrace,
             printStackTrace: _super.printStackTrace
         };
+    },
+
+    LogFactory: function() {
+        return {
+            getLogger: false
+        };
+    },
+
+    Logger: {
+        EventType: function( sName, bNewSuccess ) {
+            var type = sName;
+            var success = bNewSuccess;
+
+            return {
+                isSuccess: function() {
+                    return success;
+                },
+
+                toString: function() {
+                    return type;
+                }
+            };
+        },
+
+        OFF: Number.MAX_VALUE,
+        FATAL: 1000,
+        ERROR: 800,
+        WARNING: 600,
+        INFO: 400,
+        DEBUG: 200,
+        TRACE: 100,
+        ALL: Number.MIN_VALUE,
+
+        prototype: {
+            setLevel: false,
+            fatal: false,
+            error: false,
+            isErrorEnabled: false,
+            warning: false,
+            isWarningEnabled: false,
+            info: false,
+            isInfoEnabled: false,
+            debug: false,
+            isDebugEnabled: false,
+            trace: false,
+            isTraceEnabled: false
+        }
     },
 
     PreparedString: function(sTemplate, oCodec, sParameterCharacter) {
@@ -101,11 +161,72 @@ org.owasp.esapi = {
         };
     },
 
+    ValidationErrorList: function() {
+        var errorList = Array();
+
+        return {
+            addError: function( sContext, oValidationException ) {
+                if ( sContext == null ) throw new RuntimeException( "Context cannot be null: " + oValidationException.getLogMessage(), oValidationException );
+                if ( oValidationException == null ) throw new RuntimeException( "Context (" + sContext + ") - Error cannot be null" );
+                if ( errorList[sContext] ) throw new RuntimeException( "Context (" + sContext + ") already exists. must be unique." );
+                errorList[sContext] = oValidationException;
+            },
+
+            errors: function() {
+                return errorList;
+            },
+
+            isEmpty: function() {
+                return errorList.length == 0;
+            },
+
+            size: function() {
+                return errorList.length;
+            }
+        };
+    },
+
+    ValidationRule: function() {
+        return {
+            getValid: false,
+            setAllowNull: false,
+            getTypeName: false,
+            setTypeName: false,
+            setEncoder: false,
+            assertValid: false,
+            getValid: false,
+            getSafe: false,
+            isValid: false,
+            whitelist: false
+        };
+    },
+
+    Validator: function() {
+        return {
+            addRule: false,
+            getRule: false,
+            getValidInput: false,
+            isValidDate: false,
+            getValidDate: false,
+            isValidSafeHTML: false,
+            getValidSafeHTML: false,
+            isValidCreditCard: false,
+            getValidCreditCard: false,
+            isValidFilename: false,
+            getValidFilename: false,
+            isValidNumber: false,
+            getValidNumber: false,
+            isValidPrintable: false,
+            getValidPrintable: false
+        };
+    },
+
     ESAPI: function() {
         var _properties = $ESAPI_Properties;
 
         var _encoder = null;
         var _validator = null;
+        var _logFactory = null;
 
         return {
             properties: _properties,
@@ -118,13 +239,16 @@ org.owasp.esapi = {
                 return _encoder;
             },
 
-            logger: function(sModuleName) {
-                var _logger = Log4js.getLogger(sModuleName);
-                _logger.setLevel(_properties.logger.level);
-                for (var i = 0; i < _properties.logger.appenders.length; i++) {
-                    _logger.addAppender(new _properties.logger.appenders[i]());
+            logFactory: function() {
+                eval('$require('+_properties.logging.Implementation+');');
+                if ( !_logFactory ) {
+                    eval("_logFactory = new " + _properties.logging.Implementation + "();" );
                 }
-                return _logger;
+                return _logFactory;
+            },
+
+            logger: function(sModuleName) {
+                return this.logFactory().getLogger(sModuleName);
             },
 
             validator: function() {
