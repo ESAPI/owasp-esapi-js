@@ -201,3 +201,41 @@ function testPercentCodecDecode() {
 function testStringCharCodeAt() {
     assertEquals( parseInt("3c",16), "<test>".charCodeAt(0) );
 }
+
+function testLoggingWithDefaultConfig() {
+    var log = $ESAPI.logger( "test" );
+    log.setLevel( org.owasp.esapi.Logger.ALL );
+    try {
+        log.fatal(new org.owasp.esapi.Logger.EventType("test", false), "Test of FATAL");
+        log.error(new org.owasp.esapi.Logger.EventType("test", false), "Test of ERROR");
+        log.warning(new org.owasp.esapi.Logger.EventType("test", false), "Test of WARNING");
+        log.info(new org.owasp.esapi.Logger.EventType("test", false), "Test of INFO");
+        log.debug(new org.owasp.esapi.Logger.EventType("test", false), "Test of DEBUG");
+        log.trace(new org.owasp.esapi.Logger.EventType("test", false), "Test of TRACE");
+    } catch(e) {
+        fail(e);
+    }
+}
+
+
+function testLoggingWithLog4jsConfig() {
+    Log4js.config = Array();
+    Log4js.config['test4js'] = {
+        level: Log4js.Level.ALL,
+        appenders: [
+                new Log4js.ConsoleAppender(true)
+        ]
+    };
+
+    var log = $ESAPI.logger( "test4js" );
+    try {
+        log.fatal(new org.owasp.esapi.Logger.EventType("test", false), "Test of FATAL");
+        log.error(new org.owasp.esapi.Logger.EventType("test", false), "Test of ERROR");
+        log.warning(new org.owasp.esapi.Logger.EventType("test", false), "Test of WARNING");
+        log.info(new org.owasp.esapi.Logger.EventType("test", false), "Test of INFO");
+        log.debug(new org.owasp.esapi.Logger.EventType("test", false), "Test of DEBUG");
+        log.trace(new org.owasp.esapi.Logger.EventType("test", false), "Test of TRACE");
+    } catch(e) {
+        fail(e);
+    }
+}
