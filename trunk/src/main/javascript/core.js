@@ -99,14 +99,6 @@ if (!String.prototype.endsWith) {
     };
 }
 
-if (!Object.prototype.implements) {
-    Object.prototype.implements = function( oClazz ) {
-        for ( p in oClazz.prototype ) {
-            eval("if ( !this."+p+" ) { throw new SyntaxError(oClazz.constructor.toString() + ' must implement ' + property.toString() ); }");
-        }
-    };
-}
-
 // Declare Core Exceptions
 if ( !Exception ) {
     var Exception = function( sMsg, oException ) {
