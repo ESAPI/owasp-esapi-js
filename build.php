@@ -13,7 +13,7 @@
  */
 
 $SOURCE_DIR = "src/main/javascript/";
-$COMPLETE_FILES = array( "core.js", "esapi.properties.js", "org.owasp.esapi.js", "org.owasp.esapi.codecs.js", "org.owasp.esapi.reference.encoding.js" );
+$COMPLETE_FILES = array( "core.js", "esapi.properties.js", "org.owasp.esapi.js", "org.owasp.esapi.codecs.js", "org.owasp.esapi.reference.encoding.js", "org.owasp.esapi.reference.logging.js" );
 
 $OUTPUT_DIR = "dist/";
 $OUTPUT_FILE = "esapi.js";
