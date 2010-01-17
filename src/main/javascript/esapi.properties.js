@@ -24,7 +24,7 @@ var $ESAPI_Properties = {
     },
 
     validation: {
-        Implementation: 'org.owasp.esapi.validators.DefaultValidator',
+        Implementation: 'org.owasp.esapi.reference.validation.DefaultValidator',
         AccountName: '^[a-zA-Z0-9]{3,20}$',
         SafeString: '[a-zA-Z0-9\\-_+]*',
         Email: '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,4}$',

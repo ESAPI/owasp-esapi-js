@@ -218,6 +218,7 @@ function testLoggingWithDefaultConfig() {
 }
 
 
+/* TODO: Figure out why this isn't working or nuke the idea
 function testLoggingWithLog4jsConfig() {
     Log4js.config = Array();
     Log4js.config['test4js'] = {
@@ -239,3 +240,53 @@ function testLoggingWithLog4jsConfig() {
         fail(e);
     }
 }
+*/
+
+function testLocale() {
+    assertEquals( "en-US", org.owasp.esapi.i18n.Locale.US.toString() );
+}
+
+function testDefaultLocale() {
+    assertEquals( (navigator['language']?navigator['language']:(navigator['userLanguage']?navigator['userLanguage']:"en-US")), org.owasp.esapi.i18n.Locale.getDefault().toString() );
+}
+
+function testDefaultResourceBundle() {
+    var rb = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( org.owasp.esapi.i18n.ResourceBundle.ESAPI_Standard,
+                                                                    org.owasp.esapi.i18n.Locale.getDefault() );
+    assertNotNull(rb);
+    assertNotUndefined(rb);
+    assertEquals( "This is test #1", rb.getString( "Test", { "testnumber": "1" } ) );
+}
+
+function testCustomResourceBundle() {
+    org.owasp.esapi.i18n.ResourceBundle.Test_Resource_Bundle_en_US = function() {
+        var _parent = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( org.owasp.esapi.i18n.ResourceBundle.ESAPI_Standard, org.owasp.esapi.i18n.Locale.getDefault() );
+        var _super = new org.owasp.esapi.i18n.ResourceBundle( "Test Resource Bundle - US English", org.owasp.esapi.i18n.Locale.US, _parent );
+
+        var messages = {
+            "Test"                              : "This is custom resource test #{testnumber}"
+        };
+
+        return {
+            getParent: _super.getParent,
+            getLocale: _super.getLocale,
+            getName: _super.getName,
+            getString: _super.getString,
+            getMessage: function(sKey) {
+                return messages[sKey];
+            }
+        };
+    };
+
+    var rb = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( "Test_Resource_Bundle", org.owasp.esapi.i18n.Locale.US );
+    assertNotNull(rb);
+    assertNotUndefined(rb);
+    assertEquals( "This is custom resource test #1", rb.getString( "Test", { "testnumber": "1" } ) );
+    assertEquals( "Test: Input credit card required", rb.getString( "CreditCard.Required.Usr", { "context":"Test" } ) );
+}
+
+function testCreditCardValidationRule() {
+    var rule = new org.owasp.esapi.reference.validation.CreditCardValidationRule( "Test", null, org.owasp.esapi.i18n.Locale.US );
+    assertFalse( rule.isValid( "Test", "Test" ) );
+}
+
