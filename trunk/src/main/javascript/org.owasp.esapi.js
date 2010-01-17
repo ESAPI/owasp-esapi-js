@@ -19,12 +19,21 @@ org.owasp.esapi = {
 
     },
 
+    EncoderConstants: {
+        CHAR_LOWERS: [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' ],
+        CHAR_UPPERS: [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ],
+        CHAR_DIGITS: [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ],
+        CHAR_SPECIALS: [ '!', '$', '*', '+', '-', '.', '=', '?', '@', '^', '_', '|', '~' ],
+        CHAR_LETTERS: [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ],
+        CHAR_ALNUM: [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
+    },
+
     EnterpriseSecurityException: function(sUserMessage, sLogMessage, oException) {
         var _logMessage = sLogMessage;
         var _super = new Exception(sUserMessage, oException);
 
         return {
-            getMessage: _super.getMessage(),
+            getMessage: _super.getMessage,
             getUserMessage: _super.getMessage,
             getLogMessage: function() {
                 return _logMessage;
@@ -232,7 +241,7 @@ org.owasp.esapi = {
             properties: _properties,
 
             encoder: function() {
-                $require(_properties.encoder.Implementation);
+                eval('$require('+_properties.encoder.Implementation+');');
                 if (!_encoder) {
                     eval('_encoder = new ' + _properties.encoder.Implementation + '();');
                 }
@@ -252,8 +261,8 @@ org.owasp.esapi = {
             },
 
             validator: function() {
-                $require(_properties.validation.Implementation);
-                if (_validator == null) {
+                eval('$require('+_properties.validation.Implementation+');');
+                if (!_validator) {
                     eval('_validator = new ' + _properties.validation.Implementation + '();');
                 }
                 return _validator;

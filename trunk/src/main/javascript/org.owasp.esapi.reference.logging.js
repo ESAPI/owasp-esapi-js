@@ -120,7 +120,7 @@ org.owasp.esapi.reference.logging = {
                     logger = new Log4JSLogger(key);
 
                     if ( Log4js.config && Log4js.config[moduleName] ) {
-                        logger.setLevel( Log4js.config[moduleName].level?Log4js.config[moduleName].level:eval($ESAPI.properties.logging.Level));
+                        eval("logger.setLevel( Log4js.config[moduleName].level?Log4js.config[moduleName].level:"+$ESAPI.properties.logging.Level+");");
                         if ( Log4js.config[moduleName].appenders ) {
                             Log4js.config[moduleName].appenders.each(function(e){
                                 logger.addAppender(e);
