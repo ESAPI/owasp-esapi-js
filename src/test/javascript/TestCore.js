@@ -11,7 +11,7 @@
  * LICENSE before you use, modify, and/or redistribute this software.
  */
 
-function setup() {
+function setUp() {
     org.owasp.esapi.ESAPI.initialize();
 }
 
