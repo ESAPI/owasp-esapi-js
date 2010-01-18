@@ -1,0 +1,54 @@
+Building Uncompressed File: dist/esapi.js
+- Reading src/main/javascript/core.js
+- Reading src/main/javascript/org/owasp/esapi/Encoder.js
+- Reading src/main/javascript/org/owasp/esapi/EncoderConstants.js
+- Reading src/main/javascript/org/owasp/esapi/EnterpriseSecurityException.js
+- Reading src/main/javascript/org/owasp/esapi/HTTPUtilities.js
+- Reading src/main/javascript/org/owasp/esapi/IntrusionException.js
+- Reading src/main/javascript/org/owasp/esapi/LogFactory.js
+- Reading src/main/javascript/org/owasp/esapi/Logger.js
+- Reading src/main/javascript/org/owasp/esapi/PreparedString.js
+- Reading src/main/javascript/org/owasp/esapi/ValidationErrorList.js
+- Reading src/main/javascript/org/owasp/esapi/ValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/Validator.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/Base64.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/CSSCodec.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/Codec.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/HTMLEntityCodec.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/JavascriptCodec.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/PercentCodec.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/PushbackString.js
+- Reading src/main/javascript/org/owasp/esapi/codecs/UTF8.js
+- Reading src/main/javascript/org/owasp/esapi/i18n/ArrayResourceBundle.js
+- Reading src/main/javascript/org/owasp/esapi/i18n/Locale.js
+- Reading src/main/javascript/org/owasp/esapi/i18n/ResourceBundle.js
+- Reading src/main/javascript/org/owasp/esapi/reference/encoding/DefaultEncoder.js
+- Reading src/main/javascript/org/owasp/esapi/reference/logging/Log4JSLogFactory.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/BaseValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/CreditCardValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/DateValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/DefaultValidator.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/IntegerValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/NumberValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/StringValidationRule.js
+- Reading src/main/javascript/org/owasp/esapi/reference/validation/ValidationException.js
+Finished building dist/esapi.js (107480 bytes): Took 0.0145349502563s
+
+Building Compressed File: dist/esapi-compressed.js
+Finished building dist/esapi-compressed.js (52134 bytes): Took 1.20844578743s
+
+Copying Resources to dist/resources/
+- src/main/resources/Base.esapi.properties.js (2044 bytes) => dist/resources/Base.esapi.properties.js	[OK]
+
+Copying Documentation to dist/docs/
+- documentation/README (2587 bytes) => dist/docs/README	[OK]
+
+Copying Libraries to dist/lib/
+- lib/log4js-lib.js (34303 bytes) => dist/lib/log4js-lib.js	[OK]
+- lib/log4js.js (68555 bytes) => dist/lib/log4js.js	[OK]
+
+Cleaning Up
+
+Build complete took 1.22696089745s
+
+
