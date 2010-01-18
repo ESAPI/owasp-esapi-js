@@ -11,7 +11,9 @@
  * LICENSE before you use, modify, and/or redistribute this software.
  */
 
-var $ESAPI_Properties = {
+$namespace('Base.esapi.properties');
+
+Base.esapi.properties = {
     application: {
         Name: 'ESAPI4JS Base Application'
     },
@@ -27,8 +29,7 @@ var $ESAPI_Properties = {
         Appenders: [  ],
         LogUrl: false,
         LogApplicationName: false,
-        EncodingRequired: true,
-
+        EncodingRequired: true
     },
 
     encoder: {
