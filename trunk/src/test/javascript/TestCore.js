@@ -203,8 +203,7 @@ function testStringCharCodeAt() {
 }
 
 function testLoggingWithDefaultConfig() {
-    var log = $ESAPI.logger( "test" );
-    log.setLevel( org.owasp.esapi.Logger.ALL );
+    var log = $ESAPI.logger( "TestLogger" );
     try {
         log.fatal(new org.owasp.esapi.Logger.EventType("test", false), "Test of FATAL");
         log.error(new org.owasp.esapi.Logger.EventType("test", false), "Test of ERROR");
@@ -216,67 +215,27 @@ function testLoggingWithDefaultConfig() {
         fail(e);
     }
 }
-
-
-/* TODO: Figure out why this isn't working or nuke the idea
-function testLoggingWithLog4jsConfig() {
-    Log4js.config = Array();
-    Log4js.config['test4js'] = {
-        level: Log4js.Level.ALL,
-        appenders: [
-                new Log4js.ConsoleAppender(true)
-        ]
-    };
-
-    var log = $ESAPI.logger( "test4js" );
-    try {
-        log.fatal(new org.owasp.esapi.Logger.EventType("test", false), "Test of FATAL");
-        log.error(new org.owasp.esapi.Logger.EventType("test", false), "Test of ERROR");
-        log.warning(new org.owasp.esapi.Logger.EventType("test", false), "Test of WARNING");
-        log.info(new org.owasp.esapi.Logger.EventType("test", false), "Test of INFO");
-        log.debug(new org.owasp.esapi.Logger.EventType("test", false), "Test of DEBUG");
-        log.trace(new org.owasp.esapi.Logger.EventType("test", false), "Test of TRACE");
-    } catch(e) {
-        fail(e);
-    }
-}
-*/
 
 function testLocale() {
     assertEquals( "en-US", org.owasp.esapi.i18n.Locale.US.toString() );
 }
 
 function testDefaultLocale() {
-    assertEquals( (navigator['language']?navigator['language']:(navigator['userLanguage']?navigator['userLanguage']:"en-US")), org.owasp.esapi.i18n.Locale.getDefault().toString() );
+    assertEquals( $ESAPI.properties.localization.DefaultLocale, $ESAPI.locale().toString() );
 }
 
 function testDefaultResourceBundle() {
-    var rb = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( org.owasp.esapi.i18n.ResourceBundle.ESAPI_Standard,
-                                                                    org.owasp.esapi.i18n.Locale.getDefault() );
+    var rb = $ESAPI.resourceBundle();
     assertNotNull(rb);
     assertNotUndefined(rb);
     assertEquals( "This is test #1", rb.getString( "Test", { "testnumber": "1" } ) );
 }
 
 function testCustomResourceBundle() {
-    org.owasp.esapi.i18n.ResourceBundle.Test_Resource_Bundle_en_US = function() {
-        var _parent = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( org.owasp.esapi.i18n.ResourceBundle.ESAPI_Standard, org.owasp.esapi.i18n.Locale.getDefault() );
-        var _super = new org.owasp.esapi.i18n.ResourceBundle( "Test Resource Bundle - US English", org.owasp.esapi.i18n.Locale.US, _parent );
+    var stdResourceBundle = $ESAPI.resourceBundle();
+    var messages = { "Test":"This is custom resource test #{testnumber}" };
 
-        var messages = {
-            "Test"                              : "This is custom resource test #{testnumber}"
-        };
-
-        return {
-            getParent: _super.getParent,
-            getLocale: _super.getLocale,
-            getName: _super.getName,
-            getString: _super.getString,
-            getMessage: function(sKey) {
-                return messages[sKey];
-            }
-        };
-    };
+    org.owasp.esapi.i18n.ResourceBundle.Test_Resource_Bundle_en_US = new org.owasp.esapi.i18n.ArrayResourceBundle("Test Resource Bundle - US English", org.owasp.esapi.i18n.Locale.US, messages, stdResourceBundle );
 
     var rb = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( "Test_Resource_Bundle", org.owasp.esapi.i18n.Locale.US );
     assertNotNull(rb);
