@@ -200,7 +200,7 @@ foreach($dir_content as $key => $content)
         $content_chunks = explode(".",$content);
         $ext = $content_chunks[count($content_chunks) - 1];
         // only include files with desired extensions
-        if (in_array($ext, $allow_extensions))
+        if ( ( is_array( $allow_extensions ) && in_array($ext, $allow_extensions) ) || ( is_string( $allow_extensions ) && $allow_extensions == '*' ) )
         {
             // save file name with path
             $all_data[] = $path;
@@ -222,31 +222,13 @@ foreach($dir_content as $key => $content)
 return $all_data;
 } // end get_files()
 
-function getDirectoryTree( $outerDir, $filters = array() ){
-    $dirs = array_diff( scandir( $outerDir ), array_merge( Array( ".", "..",".svn" ), $filters ) );
-    $dir_array = Array();
-    foreach( $dirs as $d )
-        $dir_array[ $d ] = is_dir($outerDir."/".$d) ? getDirectoryTree( $outerDir."/".$d, $filters ) : $dir_array[ $d ] = $d;
-    return $dir_array;
-}
-
-function getRelativePath( $a ) {
-    $o = "";
-    if ( is_array($a) ) {
-        foreach( $a as $e ) {
-            $o .= getRelativePath( $e );
-        }
-    }
-    return $o.$a;
-}
-
 function microtime_float() {
     list($usec,$sec) = explode(" ",microtime());
     return ((float)$usec + (float)$sec);
 }
 
-function copydir( $src, $dst ) {
-    $filelist = get_files($src);
+function copydir( $src, $dst, $allow_extensions = array( 'js' ), $ignore_files = array( ), $ignore_regex = '/^_/', $ignore_dirs = array(".","..",".svn") ) {
+    $filelist = get_files($src, $allow_extensions, $ignore_files, $ignore_regex, $ignore_dirs);
     foreach($filelist as $i=>$file) {
         $dir_name = substr( $file, 0, strrpos( $file, '/' ) );
         if ( !is_dir($dir_name) ) {

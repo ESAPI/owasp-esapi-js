@@ -12,12 +12,14 @@
  * LICENSE before you use, modify, and/or redistribute this software.
  */
 
-$DOCUMENTATION_DIR = "documentation/";
+$DOCUMENTATION_DIR = "documentation";
 $SOURCE_DIR = "src/main/javascript";
 $RESOURCES_DIR = "src/main/resources";
+$LIB_DIR = "lib";
 $OUTPUT_DIR = "dist/";
 $OUTPUT_RESOURCES = "resources/";
 $OUTPUT_DOCUMENTATION = "docs/";
+$OUTPUT_LIBS = "lib/";
 $OUTPUT_FILE = "esapi.js";
 $OUTPUT_FILE_COMPRESSED = "esapi-compressed.js";
 
