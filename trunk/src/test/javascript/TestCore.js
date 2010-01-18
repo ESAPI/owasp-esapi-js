@@ -10,6 +10,11 @@
  * The ESAPI is published by OWASP under the BSD license. You should read and accept the
  * LICENSE before you use, modify, and/or redistribute this software.
  */
+
+function setup() {
+    org.owasp.esapi.ESAPI.initialize();
+}
+
 function testNamespace() {
     assertNotNull($namespace);
     assertEvaluatesToTrue($namespace('org.owasp.esapi.testnamespace'));
