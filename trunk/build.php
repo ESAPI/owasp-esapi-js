@@ -13,27 +13,19 @@
  */
 
 include('./build-functions.php');
+include('./build-properties.php');
 
-$DOCUMENTATION_DIR = "documentation/";
-$SOURCE_DIR = "src/main/javascript";
-$RESOURCES_DIR = "src/main/resources/";
-$OUTPUT_DIR = "dist/";
-$OUTPUT_RESOURCES = "resources/";
-$OUTPUT_DOCUMENTATION = "docs/";
-$OUTPUT_FILE = "esapi.js";
-$OUTPUT_FILE_COMPRESSED = "esapi-compressed.js";
-
-$JDK_HOME = "/home/cschmidt/jdk1.6.0_14/";
-$YUI_COMPRESSOR_JAR = "lib/yuicompressor-2.4.2.jar";
-$TMP_DIR = "tmp/";
+$build_start = microtime_float();
 
 rmdirr($OUTPUT_DIR);
 if ( !is_dir($TMP_DIR) ) mkdir($TMP_DIR, 0700);
 mkdir($OUTPUT_DIR, 0700);
 
 echo("Building Uncompressed File: $OUTPUT_DIR$OUTPUT_FILE\n\r");
-
+$time_start = microtime_float();
 $fpOut = fopen( $OUTPUT_DIR.$OUTPUT_FILE, "w" );
+
+fwrite( $fpOut, $LICENSE_TEXT );
 
 $src = get_files( $SOURCE_DIR );
 foreach( $src as $i=>$fn ) {
@@ -43,14 +35,16 @@ foreach( $src as $i=>$fn ) {
     while(!feof($fp)) {
         $contents .= fgets($fp);
     }
+    $contents = substr( $contents, strpos( $contents, "*/" ) + 2 );
     fwrite( $fpOut, $contents );
     fclose($fp);
 }
 
-echo("Finished building $OUTPUT_DIR$OUTPUT_FILE (".filesize($fpOut)." bytes): Took " );
+echo("Finished building $OUTPUT_DIR$OUTPUT_FILE (".filesize($OUTPUT_DIR.$OUTPUT_FILE)." bytes): Took ".( microtime_float() - $time_start )."s\n\n" );
 fclose($fpOut);
 
 echo("Building Compressed File: $OUTPUT_DIR$OUTPUT_FILE_COMPRESSED\n\r");
+$time_start = microtime_float();
 
 Minify_YUICompressor::$jarFile = $YUI_COMPRESSOR_JAR;
 Minify_YUICompressor::$tempDir = $TMP_DIR;
@@ -69,33 +63,19 @@ $fp = fopen( $OUTPUT_DIR.$OUTPUT_FILE_COMPRESSED, "w" );
 fwrite( $fp, $compressed );
 fclose($fp);
 
+echo("Finished building $OUTPUT_DIR$OUTPUT_FILE_COMPRESSED (".filesize($OUTPUT_DIR.$OUTPUT_FILE_COMPRESSED)." bytes): Took ".( microtime_float() - $time_start )."s\n\n" );
+
 mkdir($OUTPUT_DIR.'resources');
 echo("Copying Resources to $OUTPUT_DIR$OUTPUT_RESOURCES\n");
 
 $dir = dir($RESOURCES_DIR);
-while (false !== $entry = $dir->read()) {
-    // Skip pointers
-    if ($entry == '.' || $entry == '..' || $entry == '.svn' ) {
-        continue;
-    }
-    echo("- Copying $entry to $OUTPUT_DIR.$OUTPUT_RESOURCES.$entry\n");
-    copy( $RESOURCES_DIR.$entry, $OUTPUT_DIR.$OUTPUT_RESOURCES.$entry );
-}
-$dir->close();
+copydir($RESOURCES_DIR,$OUTPUT_DIR.$OUTPUT_RESOURCES);
 
 mkdir($OUTPUT_DIR.$OUTPUT_DOCUMENTATION);
-$dir = dir($DOCUMENTATION_DIR);
-while (false !== $entry = $dir->read()) {
-    // Skip pointers
-    if ($entry == '.' || $entry == '..' || $entry == '.svn' ) {
-        continue;
-    }
-    echo("- Copying $entry to $OUTPUT_DIR.$OUTPUT_DOCUMENTATION.$entry\n");
-    copy( $RESOURCES_DIR.$entry, $OUTPUT_DIR.$OUTPUT_DOCUMENTATION.$entry );
-}
-$dir->close();
+copydir($DOCUMENTATION_DIR,$OUTPUT_DIR.$OUTPUT_DOCUMENTATION);
 
-echo("Cleaning Up\n");
+echo("\nCleaning Up\n\n");
 rmdir($TMP_DIR);
 
+echo("Build complete took ".(microtime_float()-$build_start)."s\n\n\r");
 ?>

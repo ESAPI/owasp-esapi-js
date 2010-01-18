@@ -231,12 +231,36 @@ function getDirectoryTree( $outerDir, $filters = array() ){
 }
 
 function getRelativePath( $a ) {
-    $o = "";              
+    $o = "";
     if ( is_array($a) ) {
         foreach( $a as $e ) {
             $o .= getRelativePath( $e );
         }
     }
     return $o.$a;
+}
+
+function microtime_float() {
+    list($usec,$sec) = explode(" ",microtime());
+    return ((float)$usec + (float)$sec);
+}
+
+function copydir( $src, $dst ) {
+    $filelist = get_files($src);
+    foreach($filelist as $i=>$file) {
+        $dir_name = substr( $file, 0, strrpos( $file, '/' ) );
+        if ( !is_dir($dir_name) ) {
+            echo("- Creating Directory: $dir_name\n");
+            mkdir($dir_name);
+        }
+
+        $dst_file = substr( $file, strlen( $src )+1 );
+        echo("- $file (".filesize($file)." bytes) => $dst$dst_file");
+        copy( $file, $dst.$dst_file );
+        if ( filesize($file) == filesize($dst.$dst_file) )
+            echo("\t[OK]\n");
+        else
+            echo("\t[ERROR]\n");
+    }
 }
 ?>
