@@ -63,17 +63,19 @@ $fp = fopen( $OUTPUT_DIR.$OUTPUT_FILE_COMPRESSED, "w" );
 fwrite( $fp, $compressed );
 fclose($fp);
 
-echo("Finished building $OUTPUT_DIR$OUTPUT_FILE_COMPRESSED (".filesize($OUTPUT_DIR.$OUTPUT_FILE_COMPRESSED)." bytes): Took ".( microtime_float() - $time_start )."s\n\n" );
+echo("Finished building $OUTPUT_DIR$OUTPUT_FILE_COMPRESSED (".filesize($OUTPUT_DIR.$OUTPUT_FILE_COMPRESSED)." bytes): Took ".( microtime_float() - $time_start )."s\n" );
 
+echo("\nCopying Resources to $OUTPUT_DIR$OUTPUT_RESOURCES\n");
 mkdir($OUTPUT_DIR.'resources');
-echo("Copying Resources to $OUTPUT_DIR$OUTPUT_RESOURCES\n");
-
-$dir = dir($RESOURCES_DIR);
 copydir($RESOURCES_DIR,$OUTPUT_DIR.$OUTPUT_RESOURCES);
 
+echo("\nCopying Documentation to $OUTPUT_DIR$OUTPUT_DOCUMENTATION\n");
 mkdir($OUTPUT_DIR.$OUTPUT_DOCUMENTATION);
-copydir($DOCUMENTATION_DIR,$OUTPUT_DIR.$OUTPUT_DOCUMENTATION);
+copydir($DOCUMENTATION_DIR,$OUTPUT_DIR.$OUTPUT_DOCUMENTATION, '*' );
 
+echo("\nCopying Libraries to $OUTPUT_DIR$OUTPUT_LIBS\n");
+mkdir($OUTPUT_DIR.$OUTPUT_LIBS);
+copydir($LIB_DIR,$OUTPUT_DIR.$OUTPUT_LIBS);
 echo("\nCleaning Up\n\n");
 rmdir($TMP_DIR);
 
