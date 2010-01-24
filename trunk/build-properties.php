@@ -22,6 +22,7 @@ $OUTPUT_DOCUMENTATION = "docs/";
 $OUTPUT_LIBS = "lib/";
 $OUTPUT_FILE = "esapi.js";
 $OUTPUT_FILE_COMPRESSED = "esapi-compressed.js";
+$OUTPUT_SRC = "src/";
 
 $JDK_HOME = "/home/cschmidt/jdk1.6.0_14/";
 $YUI_COMPRESSOR_JAR = "lib/yuicompressor-2.4.2.jar";

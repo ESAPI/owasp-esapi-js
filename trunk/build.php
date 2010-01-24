@@ -17,9 +17,10 @@ include('./build-properties.php');
 
 $build_start = microtime_float();
 
+echo("Cleaning up Distribution Directory");
 rmdirr($OUTPUT_DIR);
-if ( !is_dir($TMP_DIR) ) mkdir($TMP_DIR, 0700);
-mkdir($OUTPUT_DIR, 0700);
+if ( !is_dir($TMP_DIR ) ) mkdir($TMP_DIR, 0700);
+if ( !is_dir($OUTPUT_DIR ) ) mkdir($OUTPUT_DIR, 0700);
 
 echo("Building Uncompressed File: $OUTPUT_DIR$OUTPUT_FILE\n\r");
 $time_start = microtime_float();
@@ -66,16 +67,20 @@ fclose($fp);
 echo("Finished building $OUTPUT_DIR$OUTPUT_FILE_COMPRESSED (".filesize($OUTPUT_DIR.$OUTPUT_FILE_COMPRESSED)." bytes): Took ".( microtime_float() - $time_start )."s\n" );
 
 echo("\nCopying Resources to $OUTPUT_DIR$OUTPUT_RESOURCES\n");
-mkdir($OUTPUT_DIR.'resources');
+if (!is_dir($OUTPUT_DIR.$OUTPUT_RESOURCES))mkdir($OUTPUT_DIR.'resources');
 copydir($RESOURCES_DIR,$OUTPUT_DIR.$OUTPUT_RESOURCES);
 
 echo("\nCopying Documentation to $OUTPUT_DIR$OUTPUT_DOCUMENTATION\n");
-mkdir($OUTPUT_DIR.$OUTPUT_DOCUMENTATION);
+if (!is_dir($OUTPUT_DIR.$OUTPUT_DOCUMENTATION))mkdir($OUTPUT_DIR.$OUTPUT_DOCUMENTATION);
 copydir($DOCUMENTATION_DIR,$OUTPUT_DIR.$OUTPUT_DOCUMENTATION, '*' );
 
 echo("\nCopying Libraries to $OUTPUT_DIR$OUTPUT_LIBS\n");
-mkdir($OUTPUT_DIR.$OUTPUT_LIBS);
+if (!is_dir($OUTPUT_DIR.$OUTPUT_LIBS))mkdir($OUTPUT_DIR.$OUTPUT_LIBS);
 copydir($LIB_DIR,$OUTPUT_DIR.$OUTPUT_LIBS);
+
+echo("\nCopying Build Files and LICENSE\n");
+copy( "LICENSE", $OUTPUT_DIR."/LICENSE");
+
 echo("\nCleaning Up\n\n");
 rmdir($TMP_DIR);
 
