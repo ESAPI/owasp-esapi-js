@@ -39,7 +39,7 @@ org.owasp.esapi.reference.validation.DefaultValidator = function( oEncoder, oLoc
         },
 
         getValidInput: function( sContext, sInput, sType, nMaxLength, bAllowNull, oValidationErrorList ) {
-            var rvr = new p.StringValidationRule( sType, encoder, locale );
+            var rvr = new org.owasp.esapi.reference.validation.StringValidationRule( sType, encoder, locale );
             var p = new RegExp($ESAPI.properties.validation[sType]);
             if ( p && p instanceof RegExp ) {
                 rvr.addWhitelistPattern( p );
