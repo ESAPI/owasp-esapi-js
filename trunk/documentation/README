@@ -23,6 +23,8 @@ Quick Start:
 
 <!-- esapi4js dependencies -->
 <script type="text/javascript" language="JavaScript" src="{your_installation_path}/esapi4js/lib/log4js.js"></script>
+<!-- esapi4js i18n resources -->
+<script type="text/javascript" language="JavaScript" src="{your_installation_path}/esapi4js/resources/i18n/ESAPI_Standard_en_US.properties.js"></script>
 <!-- esapi4js configuration -->
 <script type="text/javascript" language="JavaScript" src="{your_installation_path}/esapi4js/resources/Base.esapi.properties.js"></script>
 <!-- esapi4js core -->
