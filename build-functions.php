@@ -37,7 +37,7 @@ function rmdirr($dirname)
     $dir = dir($dirname);
     while (false !== $entry = $dir->read()) {
         // Skip pointers
-        if ($entry == '.' || $entry == '..') {
+        if ($entry == '.' || $entry == '..' || $entry == '.svn' ) {
             continue;
         }
 
@@ -47,7 +47,7 @@ function rmdirr($dirname)
 
     // Clean up
     $dir->close();
-    return rmdir($dirname);
+    return;// rmdir($dirname);
 }
 
 /**
@@ -231,14 +231,16 @@ function copydir( $src, $dst, $allow_extensions = array( 'js' ), $ignore_files =
     $filelist = get_files($src, $allow_extensions, $ignore_files, $ignore_regex, $ignore_dirs);
     foreach($filelist as $i=>$file) {
         $dir_name = substr( $file, 0, strrpos( $file, '/' ) );
-        if ( !is_dir($dir_name) ) {
-            echo("- Creating Directory: $dir_name\n");
-            mkdir($dir_name);
+        $dir_name = substr( $dir_name, strlen($src)+1 );
+        if ( !is_dir($dst.$dir_name) ) {
+            echo("- Creating Directory: $dst$dir_name\n");
+            mkdir($dst.$dir_name);
         }
 
         $dst_file = substr( $file, strlen( $src )+1 );
         echo("- $file (".filesize($file)." bytes) => $dst$dst_file");
         copy( $file, $dst.$dst_file );
+        usleep(5000);
         if ( filesize($file) == filesize($dst.$dst_file) )
             echo("\t[OK]\n");
         else
