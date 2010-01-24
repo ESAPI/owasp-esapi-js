@@ -187,13 +187,11 @@ if ( !Exception ) {
 }
 
 if ( !RuntimeException ) {
-    var RuntimeException = {};
-    RuntimeException.prototype = Exception.prototype;
+    var RuntimeException = Exception;
 }
 
 if ( !IllegalArgumentException ) {
-    var IllegalArgumentException = {};
-    IllegalArgumentException.prototype = Exception.prototype;
+    var IllegalArgumentException = Exception;
 }
 
 if ( !DateFormat ) {

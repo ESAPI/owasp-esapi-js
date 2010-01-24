@@ -85,8 +85,3 @@ org.owasp.esapi.i18n.ResourceBundle.getResourceBundle = function(sResource, oLoc
         }
     }
 };
-
-with(org.owasp.esapi.i18n) {
-    ResourceBundle.ESAPI_Standard = "ESAPI_Standard";
-    ResourceBundle.ESAPI_Standard_en_US = new ArrayResourceBundle( 'ESAPI Standard Messaging - US English', Locale.US, messages );
-}
