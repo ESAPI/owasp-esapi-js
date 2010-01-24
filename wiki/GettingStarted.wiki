@@ -2,10 +2,15 @@
 
 = Installation =
 *1. Download the distribution zip from http://owasp-esapi-js.googlecode.com*
+
 *2. Unzip the distribution zip*
+
 *3. Create a directory on your server, under the web root called esapi4js*
+
 *4. Copy either esapi.js or esapi-compressed.js from dist/ to your esapi4js directory*
+
 *5. Create a lib directory under the esapi4js called lib and copy the contents of dist/lib to that directory*
+
 *6. Create a resources directory under the esapi4js called resources and copy the contents of dist/resources to that directory*
 
 = Details =
