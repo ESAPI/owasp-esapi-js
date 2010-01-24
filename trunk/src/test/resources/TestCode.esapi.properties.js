@@ -13,8 +13,9 @@
 
 // Override the default settings to enable info level logging
 Base.esapi.properties.logging = {
+    Implementation: org.owasp.esapi.reference.logging.Log4JSLogFactory,
     Level: org.owasp.esapi.Logger.INFO,
-    Appenders: [ new Log4js.ConsoleAppender(true) ],
+    Appenders: [ new Log4js.ConsoleAppender() ],
     LogApplicationName: true,
     EncodingRequired: true
 };

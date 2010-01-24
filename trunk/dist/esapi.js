@@ -188,13 +188,11 @@ if ( !Exception ) {
 }
 
 if ( !RuntimeException ) {
-    var RuntimeException = {};
-    RuntimeException.prototype = Exception.prototype;
+    var RuntimeException = Exception;
 }
 
 if ( !IllegalArgumentException ) {
-    var IllegalArgumentException = {};
-    IllegalArgumentException.prototype = Exception.prototype;
+    var IllegalArgumentException = Exception;
 }
 
 if ( !DateFormat ) {
@@ -1824,11 +1822,6 @@ org.owasp.esapi.i18n.ResourceBundle.getResourceBundle = function(sResource, oLoc
         }
     }
 };
-
-with(org.owasp.esapi.i18n) {
-    ResourceBundle.ESAPI_Standard = "ESAPI_Standard";
-    ResourceBundle.ESAPI_Standard_en_US = new ArrayResourceBundle( 'ESAPI Standard Messaging - US English', Locale.US, messages );
-}
 
 $namespace('org.owasp.esapi.net');
 
