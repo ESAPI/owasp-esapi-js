@@ -1,7 +1,7 @@
 #summary Information on installation and basic use
 
 = Installation =
-*1. Download the distribution zip from http://owasp-esapi-js.googlecode.com*
+*1. Download the distribution zip from http://owasp-esapi-js.googlecode.com *
 
 *2. Unzip the distribution zip*
 
