@@ -23,6 +23,12 @@ var $namespace = function(name, separator, container){
   return o;
 };
 
+var $type = function( oVar, oType ) {
+    if ( !oVar instanceof oType ) {
+        throw new SyntaxError();
+    }
+};
+
 if (!$) {
     var $ = function( sElementID ) {
         return document.getElementById( sElementID );
@@ -280,21 +286,22 @@ org.owasp.esapi.ESAPI = function( oProperties ) {
     var _validator = null;
     var _logFactory = null;
     var _resourceBundle = null;
+    var _httputilities = null;
 
     return {
         properties: _properties,
 
         encoder: function() {
-            if (!_properties.encoder.Implementation) throw new RuntimeException('Configuration Error - $ESAPI.properties.encoder.Implementation object not found.');
             if (!_encoder) {
+                if (!_properties.encoder.Implementation) throw new RuntimeException('Configuration Error - $ESAPI.properties.encoder.Implementation object not found.');
                 _encoder = new _properties.encoder.Implementation();
             }
             return _encoder;
         },
 
         logFactory: function() {
-            if (!_properties.logging.Implementation) throw new RuntimeException('Configuration Error - $ESAPI.properties.logging.Implementation object not found.');
             if ( !_logFactory ) {
+                if (!_properties.logging.Implementation) throw new RuntimeException('Configuration Error - $ESAPI.properties.logging.Implementation object not found.');
                 _logFactory = new _properties.logging.Implementation();
             }
             return _logFactory;
@@ -310,17 +317,23 @@ org.owasp.esapi.ESAPI = function( oProperties ) {
 
         resourceBundle: function() {
             if (!_resourceBundle) {
-                _resourceBundle = org.owasp.esapi.i18n.ResourceBundle.getResourceBundle( _properties.localization.StandardResourceBundle, this.locale() );
+                if(!_properties.localization.StandardResourceBundle) throw new RuntimeException("Configuration Error - $ESAPI.properties.localization.StandardResourceBundle not found.");
+                _resourceBundle = new org.owasp.esapi.i18n.ObjectResourceBundle( _properties.localization.StandardResourceBundle );
             }
             return _resourceBundle;
         },
 
         validator: function() {
-            if (!_properties.validation.Implementation) throw new RuntimeException('Configuration Error - $ESAPI.properties.validation.Implementation object not found.');
             if (!_validator) {
+                if (!_properties.validation.Implementation) throw new RuntimeException('Configuration Error - $ESAPI.properties.validation.Implementation object not found.');
                 _validator = new _properties.validation.Implementation();
             }
             return _validator;
+        },
+
+        httpUtilities: function() {
+            if (!_httputilities) _httputilities = new org.owasp.esapi.HTTPUtilities();
+            return _httputilities;
         }
     };
 };

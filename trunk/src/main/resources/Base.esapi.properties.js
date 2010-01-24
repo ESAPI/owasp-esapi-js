@@ -15,7 +15,14 @@ $namespace('Base.esapi.properties');
 
 Base.esapi.properties = {
     application: {
+        // Change this value to reflect your application, or override it in an application scoped configuration.
         Name: 'ESAPI4JS Base Application'
+    },
+
+    httputilities: {
+        cookies: {
+            ForceSecure: true
+        }
     },
 
     logging: {
@@ -38,7 +45,7 @@ Base.esapi.properties = {
     },
 
     localization: {
-        StandardResourceBundle: 'ESAPI_Standard',
+        StandardResourceBundle: ESAPI_Standard_en_US,
         DefaultLocale: 'en-US'
     },
 
@@ -50,6 +57,12 @@ Base.esapi.properties = {
         IPAddress: '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$',
         URL: '^(ht|f)tp(s?)\\:\\/\\/[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\:\\\'\\/\\\\\\+=&amp;%\\$#_]*)?$',
         CreditCard: '^(\\d{4}[- ]?){3}\\d{4}$',
-        SSN: '^(?!000)([0-6]\\d{2}|7([0-6]\\d|7[012]))([ -]?)(?!00)\\d\\d\\3(?!0000)\\d{4}$'
+        SSN: '^(?!000)([0-6]\\d{2}|7([0-6]\\d|7[012]))([ -]?)(?!00)\\d\\d\\3(?!0000)\\d{4}$',
+        HttpScheme: '^(http|https)$',
+        HttpServerName: '^[a-zA-Z0-9_.\\-]*$',
+        HttpParameterName: '^[a-zA-Z0-9_]{1,32}$',
+        HttpParameterValue: '^[a-zA-Z0-9.\\-\\/+=_ ]*$',
+        HttpCookieName: '^[a-zA-Z0-9\\-_]{1,32}$',
+        HttpCookieValue: '^[a-zA-Z0-9\\-\\/+=_ ]*$'
     }
 };

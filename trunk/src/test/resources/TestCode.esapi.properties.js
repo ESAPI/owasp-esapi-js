@@ -11,6 +11,14 @@
  * LICENSE before you use, modify, and/or redistribute this software.
  */
 
+// Override the default settings to enable info level logging
+Base.esapi.properties.logging = {
+    Level: org.owasp.esapi.Logger.INFO,
+    Appenders: [ new Log4js.ConsoleAppender(true) ],
+    LogApplicationName: true,
+    EncodingRequired: true
+};
+
 Base.esapi.properties.logging["TestLogger"] = {
     Level: org.owasp.esapi.Logger.ALL,
     Appenders: [ new Log4js.ConsoleAppender() ],

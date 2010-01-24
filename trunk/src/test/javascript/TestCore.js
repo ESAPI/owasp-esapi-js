@@ -254,3 +254,17 @@ function testCreditCardValidationRule() {
     assertFalse( rule.isValid( "Test", "Test" ) );
 }
 
+function testHTTPUtilitiesAddCookie() {
+    var c = new org.owasp.esapi.net.Cookie("ESAPI4JS_Test", "true" );
+    c.setComment("For ESAPI4JS Test");
+    c.setSecure(false);
+    $ESAPI.httpUtilities().addCookie(c);
+}
+
+function testHTTPUtilitiesGetCookie() {
+    var c = $ESAPI.httpUtilities().getCookie("ESAPI4JS_Test");
+    alert(c);
+    if (!c) fail();
+    if (c.getValue()!='true') fail();
+}
+
