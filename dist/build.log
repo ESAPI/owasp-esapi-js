@@ -1,4 +1,4 @@
-Building Uncompressed File: dist/esapi.js
+Cleaning up Distribution DirectoryBuilding Uncompressed File: dist/esapi.js
 - Reading src/main/javascript/core.js
 - Reading src/main/javascript/org/owasp/esapi/Encoder.js
 - Reading src/main/javascript/org/owasp/esapi/EncoderConstants.js
@@ -21,7 +21,9 @@ Building Uncompressed File: dist/esapi.js
 - Reading src/main/javascript/org/owasp/esapi/codecs/UTF8.js
 - Reading src/main/javascript/org/owasp/esapi/i18n/ArrayResourceBundle.js
 - Reading src/main/javascript/org/owasp/esapi/i18n/Locale.js
+- Reading src/main/javascript/org/owasp/esapi/i18n/ObjectResourceBundle.js
 - Reading src/main/javascript/org/owasp/esapi/i18n/ResourceBundle.js
+- Reading src/main/javascript/org/owasp/esapi/net/Cookie.js
 - Reading src/main/javascript/org/owasp/esapi/reference/encoding/DefaultEncoder.js
 - Reading src/main/javascript/org/owasp/esapi/reference/logging/Log4JSLogFactory.js
 - Reading src/main/javascript/org/owasp/esapi/reference/validation/BaseValidationRule.js
@@ -32,23 +34,27 @@ Building Uncompressed File: dist/esapi.js
 - Reading src/main/javascript/org/owasp/esapi/reference/validation/NumberValidationRule.js
 - Reading src/main/javascript/org/owasp/esapi/reference/validation/StringValidationRule.js
 - Reading src/main/javascript/org/owasp/esapi/reference/validation/ValidationException.js
-Finished building dist/esapi.js (107480 bytes): Took 0.0145349502563s
+Finished building dist/esapi.js (112526 bytes): Took 0.0149080753326s
 
 Building Compressed File: dist/esapi-compressed.js
-Finished building dist/esapi-compressed.js (52134 bytes): Took 1.20844578743s
+Finished building dist/esapi-compressed.js (52325 bytes): Took 1.20039391518s
 
 Copying Resources to dist/resources/
-- src/main/resources/Base.esapi.properties.js (2044 bytes) => dist/resources/Base.esapi.properties.js	[OK]
+- src/main/resources/Base.esapi.properties.js (2546 bytes) => dist/resources/Base.esapi.properties.js	[OK]
+- src/main/resources/i18n/ESAPI_Standard_en_US.properties.js (4769 bytes) => dist/resources/i18n/ESAPI_Standard_en_US.properties.js	[OK]
 
 Copying Documentation to dist/docs/
-- documentation/README (2587 bytes) => dist/docs/README	[OK]
+- documentation/CHANGELOG (1596 bytes) => dist/docs/CHANGELOG	[OK]
+- documentation/README (2773 bytes) => dist/docs/README	[OK]
 
 Copying Libraries to dist/lib/
 - lib/log4js-lib.js (34303 bytes) => dist/lib/log4js-lib.js	[OK]
 - lib/log4js.js (68555 bytes) => dist/lib/log4js.js	[OK]
 
+Copying Build Files and LICENSE
+
 Cleaning Up
 
-Build complete took 1.22696089745s
+Build complete took 1.2509329319s
 
 
