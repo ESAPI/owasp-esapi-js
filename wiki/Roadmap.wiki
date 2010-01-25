@@ -19,6 +19,7 @@ Q1 2010 (Production Release 0.2)
   * Full i18n Support
   * Simple set of HTTP Utilities
   * Simple set of DOM Utilities
+  * Object and String signing API
  * Documentation
   * Full API Documentation (online/offline)
   * User Manual
