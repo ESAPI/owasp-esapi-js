@@ -39,6 +39,10 @@ Also of consideration is to specify the implementation that will handle selector
 }
 }}}
 
+The reference implementation shall use the Sizzle Selector Library (the same thing used by jQuery)
+
+http://sizzlejs.com/
+
 ==API==
 
 ===$ESAPI( selector, root )===
