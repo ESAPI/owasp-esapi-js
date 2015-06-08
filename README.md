@@ -1,6 +1,6 @@
 # OWASP Enterprise Security API (ESAPI)
 
-[![Build Status](https://secure.travis-ci.org/OWASP/ESAPI-JS.png?branch=master)](http://travis-ci.org/OWASP/ESAPI-JS)
+[![Build Status](https://travis-ci.org/ESAPI/owasp-esapi-js.svg?branch=master)](https://travis-ci.org/ESAPI/owasp-esapi-js)
 
 This file is part of the Open Web Application Security Project (OWASP)
 Enterprise Security API (ESAPI) project. For details, please see
