@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <packaging>jar</packaging>
+    <groupId>org.owasp</groupId>
+    <artifactId>esapi-js</artifactId>
+    <version>0.1.3-SNAPSHOT</version>
+    <name>OWASP Enterprise Security API (ESAPI) for JavaScript</name>
+    <description>This file is part of the Open Web Application Security Project (OWASP) Enterprise Security API (ESAPI) project</description>
+    <url>https://www.owasp.org/index.php/Category:OWASP_Enterprise_Security_API</url>
+
+    <developers>
+        <developer>
+            <id>dsmorse</id>
+            <name>David S Morse</name>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>BSD</name>
+            <url>https://raw.githubusercontent.com/ESAPI/owasp-esapi-js/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://stash.issinc.com/stash/projects/OVR/repos/esapi</url>
+        <connection>scm:git:https://stash.issinc.com/stash/scm/ovr/esapi.git</connection>
+        <developerConnection>scm:git:https://stash.issinc.com/stash/scm/ovr/esapi.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+
+            <!--  use GRUNT to clean, build and test -->
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>0.0.23</version>
+
+                <executions>
+                    <execution>
+                        <id>grunt build</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <arguments>build</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>grunt test</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <phase>test</phase>
+                        <configuration>
+                            <arguments>test</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>grunt clean</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                        <phase>clean</phase>
+                        <configuration>
+                            <arguments>clean</arguments>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+    <profile>
+        <id>install-node</id>
+        <build>
+            <plugins>
+                <!--  Set up the Node, NPM, Bower, Grunt environment -->
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>0.0.23</version>
+
+                    <executions>
+                        <execution>
+                            <id>install node and npm</id>
+                            <goals>
+                                <goal>install-node-and-npm</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <nodeVersion>v0.10.30</nodeVersion>
+                                <npmVersion>2.7.5</npmVersion>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>npm install</id>
+                            <goals>
+                                <goal>npm</goal>
+                            </goals>
+                            <phase>process-sources</phase>
+                            <configuration>
+                                <arguments>install</arguments>
+                            </configuration>
+                        </execution>
+
+                    </executions>
+                </plugin>
+
+            </plugins>
+        </build>
+    </profile>
+    </profiles>
+</project>

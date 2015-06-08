@@ -1,0 +1,43 @@
+{
+  "name": "ESAPI-JS",
+  "version": "0.1.3",
+  "description": "ESAPI",
+  "homepage": "https://www.owasp.org/index.php/Category:OWASP_Enterprise_Security_API",
+  "main": "dist/ESAPI-JS.js",
+  "readmeFilename": "README.md",
+  "author": {
+    "name": "OWASP",
+    "email": "OWASP"
+  },
+  "repository": {
+    "url": "https://github.com/ESAPI/owasp-esapi-js",
+    "type": "git"
+  },
+  "license": "BSD",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "bower": "~1.1.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-qunit": "~0.3.0",
+    "grunt-contrib-uglify": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-conventional-changelog": "^1.1.0",
+    "grunt-groc": "^0.4.5",
+    "grunt-jscs": "^1.1.0",
+    "grunt-lintspaces": "^0.5.1",
+    "jit-grunt": "^0.7.0",
+    "jshint-stylish": "^0.2.0",
+    "load-grunt-config": "^0.10.0",
+    "time-grunt": "^0.3.2"
+  },
+  "scripts": {
+    "install": "bower install",
+    "test": "grunt test"
+  }
+}

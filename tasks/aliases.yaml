@@ -1,0 +1,19 @@
+default:
+  - build
+
+build:
+  - clean
+#  - jshint
+#  - jscs
+#  - lintspaces
+  - copy
+  - concat
+  - uglify
+  - qunit
+
+release:
+  - build
+  - changelog
+
+test:
+  -qunit

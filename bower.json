@@ -1,0 +1,26 @@
+{
+  "name": "owasp-esapi-js",
+  "version": "0.1.3",
+  "homepage": "https://www.owasp.org/index.php/Category:OWASP_Enterprise_Security_API",
+  "authors": [
+    "The OWASP Foundation"
+  ],
+  "description": "The purpose of the ESAPI is to provide a simple interface that provides all the security functions a developer is likely to need in a clear, consistent, and easy to use way. The ESAPI architecture is very simple, just a collection of classes that encapsulate the key security operations most applications need.",
+  "main": "dist/esapi.js",
+  "keywords": [
+    "OWASP",
+    "Enterprise",
+    "Security"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "qunit": "~1.18.0"
+  }
+}
