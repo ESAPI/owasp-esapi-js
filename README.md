@@ -1,25 +1,44 @@
-# OWASP Enterprise Security API (ESAPI)
+# DEPRECATED - OWASP Enterprise Security API for JavaScript (ESAPI-JS)
 
-[![Build Status](https://travis-ci.org/ESAPI/owasp-esapi-js.svg?branch=master)](https://travis-ci.org/ESAPI/owasp-esapi-js)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 This file is part of the Open Web Application Security Project (OWASP)
 Enterprise Security API (ESAPI) project. For details, please see
-http://www.owasp.org/index.php/ESAPI.
+[https://owasp.org/www-project-enterprise-security-api/](https://owasp.org/www-project-enterprise-security-api/).
 
 Copyright (c) 2008 - The OWASP Foundation
 
 The ESAPI is published by OWASP under the BSD license. You should read and accept the
 LICENSE before you use, modify, and/or redistribute this software.
 
-ESAPI
 
-## Installation
+## WARNING: This project is deprecated and unmaintainted. Use at your own risk.
+This project is no longer supported. It is known to be potentially affected by a
+vulnerability in 'bower' (specifically, CVE-2019-5484). This vulnerability could
+be addressed by upgrading ESAPI-JS to use bower 1.8.8 or later, however this has
+been tried and resulted in deployment problems when using NPM. See the ensuing
+discussion for [PR#29](https://github.com/ESAPI/owasp-esapi-js/pull/29) for
+details.
+
+### Potential Alternatives to ESAPI-JS (aka, ESAPI4JS)
+* [node-esapi](https://github.com/ESAPI/node-esapi/) - a minimal port of ESAPI-JS' output encoder
+  that does not depend on bower and as of this writing (2021-03-30), has no
+  known vulnerabilities. It does not include the validator or other portions of ESAPI-JS.
+* [DOMPurify](https://github.com/cure53/DOMPurify/) - a DOM-only, XSS sanitizer for HTML, MathML, and SVG.
+* Lots of additional alternatives if your project is not pure JavaScript.
+
+### Looking for Maintainers
+If you would like to support project, please contact one or both of the ESAPI project
+leaders listed on the [OWASP ESAPI wiki page](https://owasp.org/www-project-enterprise-security-api/).
+They can unarchive it for you.
+
+## Installation Instructions
 
 ```
 $ npm install --save-dev ESAPI-JS
 ```
 
-Installation:
+### Installation:
 1. Download the distribution zip from http://owasp-esapi-js.googlecode.com
 2. Unzip the distribution zip
 3. Create a directory on your server, under the web root called esapi4js
