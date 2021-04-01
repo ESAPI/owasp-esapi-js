@@ -1,7 +1,7 @@
 /*! ESAPI-JS - v0.1.3
- *  Release on: 2015-06-08
+ *  Release on: 2020-08-06
  *  https://www.owasp.org/index.php/Category:OWASP_Enterprise_Security_API
- *  Copyright (c) 2015 OWASP
+ *  Copyright (c) 2020 OWASP
  *  Licensed BSD */
 // Utility and Core API Methods
 var $namespace = function(name, separator, container){
